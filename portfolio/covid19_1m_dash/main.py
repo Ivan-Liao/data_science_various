@@ -99,6 +99,11 @@ app.layout = html.Div(children=[
     html.Hr(style={'border-width': 5, 'background-color': 'white'}),
     html.Label('US and state data from "The COVID Tracking Project at The Atlantic"', style={'margin-right': '50px'}),
     html.Label('Global data from github.com/datasets/covid-19 under the Open Data Commons Public Domain and Dedication License'),
+    dcc.Interval(
+        id='interval-component',
+        interval = 1000 * 60 * 10,
+        n_intervals=0
+    ),
     ], style={'backgroundColor': app_colors['dark grey'],
               'color':
                   app_colors['white'],
@@ -176,9 +181,10 @@ def update_figure(hcd, locality, state_input):
 @app.callback(
     Output(component_id='reddit-posts', component_property='children'),
     #Output(component_id='youtube-vids', component_property='children'),
-    Input(component_id='show-num-articles', component_property='value')
+    Input(component_id='show-num-articles', component_property='value'),
+    Input(component_id='interval-component', component_property='n_intervals')
 )
-def update_articles(num_articles):
+def update_articles(num_articles, n):
     data_reddit = top_reddit_posts(num_articles)
     def format_reddit_data():
         temp_layout_list = []
@@ -193,6 +199,6 @@ def update_articles(num_articles):
         return temp_layout_list
     return format_reddit_data()
 
-
-if __name__ == '__main__':
-    app.run_server(debug=True)
+#
+# if __name__ == '__main__':
+#     app.run_server(debug=True)
